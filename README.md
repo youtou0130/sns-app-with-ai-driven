@@ -1,5 +1,50 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Database (Supabase + Prisma)
+
+このプロジェクトは **Supabase** (PostgreSQL) と **Prisma** でデータベースを利用します。
+
+### 1. 依存関係のインストール
+
+```bash
+npm install
+```
+
+### 2. 環境変数
+
+プロジェクトルートに `.env` を作成し、`.env.example` を参考に以下を設定します。
+
+- **Prisma**: `DATABASE_URL`（トランザクションプーラー）、`DIRECT_URL`（マイグレーション用）
+- **Supabase クライアント**: `NEXT_PUBLIC_SUPABASE_URL`、`NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+接続文字列は [Supabase ダッシュボード](https://supabase.com/dashboard) > プロジェクト > **Settings** > **Database** > **Connection string** で取得できます。
+
+### 3. マイグレーション
+
+スキーマを DB に反映する場合:
+
+```bash
+npm run db:push
+# または履歴を残す場合
+npm run db:migrate
+```
+
+### 4. Prisma Client の生成
+
+```bash
+npm run db:generate
+```
+
+`npm run build` 時にも自動で実行されます。
+
+### 利用例
+
+- **Prisma**: `import { prisma } from "@/lib/prisma"` で CRUD
+- **Supabase（サーバー）**: `import { createClient } from "@/lib/supabase/server"` → `const supabase = await createClient()`
+- **Supabase（クライアント）**: `import { createClient } from "@/lib/supabase/client"` → `const supabase = createClient()`
+
+---
+
 ## Getting Started
 
 First, run the development server:
