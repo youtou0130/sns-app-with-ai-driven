@@ -16,3 +16,27 @@ export interface PostWithAuthor {
   retweetsCount: number;
   repliesCount: number;
 }
+
+// ユーザープロフィール用
+export interface UserProfile {
+  id: string;
+  username: string;
+  displayName: string | null;
+  bio: string | null;
+  avatarUrl: string | null;
+  coverUrl: string | null;
+  createdAt: Date;
+  followersCount: number;
+  followingCount: number;
+}
+
+export interface UserProfileWithPosts {
+  user: UserProfile;
+  posts: PostWithAuthor[];
+}
+
+/** ポスト詳細用（リプライ含む） */
+export interface PostDetailWithReplies {
+  post: PostWithAuthor;
+  replies: PostWithAuthor[];
+}

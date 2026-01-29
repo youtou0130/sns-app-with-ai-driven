@@ -5,7 +5,7 @@ import { HomeTimeline } from "@/components/home/home-timeline";
 import { HomeRightColumn } from "@/components/home/home-right-column";
 import { MobileHeader } from "@/components/home/mobile-header";
 import { MobileBottomNav } from "@/components/home/mobile-bottom-nav";
-import { getTimelinePosts } from "@/lib/posts";
+import { getTimelinePosts } from "@/lib/dal";
 
 export interface NewsItem {
   id: number;

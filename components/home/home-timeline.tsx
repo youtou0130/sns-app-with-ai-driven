@@ -2,7 +2,7 @@
 import type { FC } from "react";
 import type { PostWithAuthor } from "@/types/post";
 import { Button } from "@/components/ui/button";
-import { formatRelativeTime } from "@/lib/utils/date";
+import { PostCard } from "./post-card";
 import {
   Image as ImageIcon,
   Gift,
@@ -10,10 +10,6 @@ import {
   Smile,
   CalendarClock,
   MapPin,
-  MessageCircle,
-  Repeat2,
-  Heart,
-  Share,
 } from "lucide-react";
 
 interface HomeTimelineProps {
@@ -104,70 +100,8 @@ const PostList: FC<PostListProps> = ({ posts }) => {
   return (
     <ul>
       {posts.map((post) => (
-        <PostItem key={post.id} post={post} />
+        <PostCard key={post.id} post={post} linkToDetail />
       ))}
     </ul>
-  );
-};
-
-interface PostItemProps {
-  post: PostWithAuthor;
-}
-
-const PostItem: FC<PostItemProps> = ({ post }) => {
-  const displayName = post.author.displayName || post.author.username;
-  const avatarInitial = displayName.charAt(0).toUpperCase();
-
-  return (
-    <li className="flex gap-3 border-b border-slate-200 dark:border-slate-800 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-900/60 transition-colors cursor-pointer">
-      {/* Avatar */}
-      {post.author.avatarUrl ? (
-        <img
-          src={post.author.avatarUrl}
-          alt={displayName}
-          className="mt-1 h-10 w-10 rounded-full object-cover"
-        />
-      ) : (
-        <div className="mt-1 flex h-10 w-10 items-center justify-center rounded-full bg-slate-300 dark:bg-slate-800 text-sm font-semibold text-slate-700 dark:text-slate-50">
-          {avatarInitial}
-        </div>
-      )}
-
-      <div className="min-w-0 flex-1">
-        {/* User info */}
-        <div className="flex items-center gap-1 text-sm">
-          <span className="font-semibold truncate text-slate-950 dark:text-slate-50">
-            {displayName}
-          </span>
-          <span className="text-slate-500 truncate">@{post.author.username}</span>
-          <span className="text-slate-500">・</span>
-          <span className="text-slate-500">{formatRelativeTime(post.createdAt)}</span>
-        </div>
-
-        {/* Content */}
-        <p className="mt-1 whitespace-pre-wrap break-words text-[15px] leading-relaxed text-slate-950 dark:text-slate-50">
-          {post.content}
-        </p>
-
-        {/* Actions */}
-        <div className="mt-3 flex max-w-md items-center justify-between text-slate-500">
-          <button className="flex items-center gap-1.5 rounded-full p-2 -ml-2 hover:bg-sky-500/10 hover:text-sky-500 transition-colors">
-            <MessageCircle className="h-4 w-4" />
-            <span className="text-xs">{post.repliesCount || ""}</span>
-          </button>
-          <button className="flex items-center gap-1.5 rounded-full p-2 hover:bg-emerald-500/10 hover:text-emerald-500 transition-colors">
-            <Repeat2 className="h-4 w-4" />
-            <span className="text-xs">{post.retweetsCount || ""}</span>
-          </button>
-          <button className="flex items-center gap-1.5 rounded-full p-2 hover:bg-rose-500/10 hover:text-rose-500 transition-colors">
-            <Heart className="h-4 w-4" />
-            <span className="text-xs">{post.likesCount || ""}</span>
-          </button>
-          <button className="rounded-full p-2 hover:bg-sky-500/10 hover:text-sky-500 transition-colors">
-            <Share className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-    </li>
   );
 };

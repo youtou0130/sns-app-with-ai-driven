@@ -44,11 +44,14 @@ model Post {
   id        String   @id @default(cuid())
   userId    String   @map("user_id")
   content   String   @db.VarChar(280) // 最大280文字
+  replyToId String?  @map("reply_to_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replyTo  Post?     @relation("Replies", fields: [replyToId], references: [id], onDelete: Cascade)
+  replies  Post[]    @relation("Replies")
   likes    Like[]
   retweets Retweet[]
 

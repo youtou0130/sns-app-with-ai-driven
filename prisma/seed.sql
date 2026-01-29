@@ -44,6 +44,23 @@ INSERT INTO posts (id, user_id, content, created_at, updated_at) VALUES
   ('clpost012emma02', 'cluser005emma0', 'プロダクトロードマップの優先順位付け、ステークホルダーとの調整が大変...', NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day');
 
 -- ============================================
+-- Replies (リプライ)
+-- ============================================
+INSERT INTO posts (id, user_id, content, reply_to_id, created_at, updated_at) VALUES
+  -- clpost001alice1 へのリプライ
+  ('clreply001bob01', 'cluser002bob00', 'Server Components のデータフェッチもすごく使いやすいよね！', 'clpost001alice1', NOW() - INTERVAL '4 days', NOW() - INTERVAL '4 days'),
+  ('clreply002carol1', 'cluser003carol', 'RSC と Prisma の相性も良いです 👍', 'clpost001alice1', NOW() - INTERVAL '3 days', NOW() - INTERVAL '3 days'),
+  ('clreply003emma01', 'cluser005emma0', 'チームでも導入検討中！', 'clpost001alice1', NOW() - INTERVAL '2 days', NOW() - INTERVAL '2 days'),
+  -- clpost006carol1 へのリプライ
+  ('clreply004alice1', 'cluser001alice', 'パーティションキーの設計が肝だよね', 'clpost006carol1', NOW() - INTERVAL '5 days', NOW() - INTERVAL '5 days'),
+  ('clreply005david1', 'cluser004david', 'スケーラビリティの話、もっと聞きたい', 'clpost006carol1', NOW() - INTERVAL '4 days', NOW() - INTERVAL '4 days'),
+  -- clpost009david1 へのリプライ
+  ('clreply006emma02', 'cluser005emma0', 'どの領域が特に気になってますか？', 'clpost009david1', NOW() - INTERVAL '6 days', NOW() - INTERVAL '6 days'),
+  ('clreply007carol1', 'cluser003carol', 'インフラ周りのスタートアップにも注目してる', 'clpost009david1', NOW() - INTERVAL '5 days', NOW() - INTERVAL '5 days'),
+  -- clpost004bob001 へのリプライ
+  ('clreply008alice2', 'cluser001alice', 'それすごく便利そう！完成したら教えて', 'clpost004bob001', NOW() - INTERVAL '3 days', NOW() - INTERVAL '3 days');
+
+-- ============================================
 -- Likes (いいね)
 -- ============================================
 INSERT INTO likes (id, user_id, post_id, created_at) VALUES
