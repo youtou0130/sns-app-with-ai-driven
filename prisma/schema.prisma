@@ -17,13 +17,15 @@ datasource db {
 // ============================================
 model User {
   id           String   @id @default(cuid())
+  clerkUserId  String?  @unique @map("clerk_user_id")  // Clerk 連携時
   username     String   @unique
   email        String   @unique
-  passwordHash String   @map("password_hash")
+  passwordHash String?  @map("password_hash")  // Clerk 連携時は null
   displayName  String?  @map("display_name")
   bio          String?
   avatarUrl    String?  @map("avatar_url")
   coverUrl     String?  @map("cover_url")  // プロフィールカバー画像
+  location     String?  @map("location")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 

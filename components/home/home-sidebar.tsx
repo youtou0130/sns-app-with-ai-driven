@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { NavItem } from "@/app/page";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { SidebarUser } from "./sidebar-user";
 import {
   Home,
   Search,
@@ -18,6 +19,8 @@ import {
 
 interface HomeSidebarProps {
   navItems: NavItem[];
+  /** ログイン中のユーザー名（プロフィールリンク先）。未ログイン時は /sign-in へ */
+  currentUsername?: string | null;
 }
 
 function getNavIcon(label: string, isActive: boolean): ReactElement {
@@ -50,7 +53,10 @@ function getNavIcon(label: string, isActive: boolean): ReactElement {
   }
 }
 
-export const HomeSidebar: FC<HomeSidebarProps> = ({ navItems }) => {
+export const HomeSidebar: FC<HomeSidebarProps> = ({
+  navItems,
+  currentUsername = null,
+}) => {
   return (
     <aside className="hidden shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 pr-4 pt-2 lg:flex lg:w-64 lg:flex-col">
       <div className="mb-4 flex h-12 items-center pl-2">
@@ -79,11 +85,22 @@ export const HomeSidebar: FC<HomeSidebarProps> = ({ navItems }) => {
             </>
           );
 
+          if (item.label === "ホーム") {
+            return (
+              <Link key={item.label} href="/" className={baseClassName}>
+                {content}
+              </Link>
+            );
+          }
+
           if (item.label === "プロフィール") {
+            const profileHref = currentUsername
+              ? `/profile/${currentUsername}`
+              : "/sign-in";
             return (
               <Link
                 key={item.label}
-                href="/profile"
+                href={profileHref}
                 className={baseClassName}
               >
                 {content}
@@ -112,18 +129,7 @@ export const HomeSidebar: FC<HomeSidebarProps> = ({ navItems }) => {
         <ThemeToggle />
       </div>
 
-      <div className="mb-4 flex items-center justify-between rounded-full px-3 py-2 hover:bg-slate-200 dark:hover:bg-slate-900">
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-300 dark:bg-slate-800 text-sm font-semibold text-slate-700 dark:text-slate-50">
-            Y
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold text-slate-950 dark:text-slate-50">youtou</span>
-            <span className="text-xs text-slate-500">@youtou0130</span>
-          </div>
-        </div>
-        <span className="text-xl text-slate-500">…</span>
-      </div>
+      <SidebarUser />
     </aside>
   );
 };

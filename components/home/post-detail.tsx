@@ -2,6 +2,7 @@
 import type { FC } from "react";
 import type { PostDetailWithReplies } from "@/types/post";
 import { PostCard } from "./post-card";
+import { ReplyComposer } from "./reply-composer";
 
 interface PostDetailProps {
   data: PostDetailWithReplies;
@@ -25,6 +26,10 @@ export const PostDetail: FC<PostDetailProps> = ({ data }) => {
             <PostCard key={reply.id} post={reply} linkToDetail={false} />
           ))}
         </ul>
+        <ReplyComposer
+          replyToPostId={post.id}
+          replyToUsername={post.author.username}
+        />
       </div>
     </section>
   );

@@ -1,16 +1,8 @@
 // components/home/home-timeline.tsx
 import type { FC } from "react";
 import type { PostWithAuthor } from "@/types/post";
-import { Button } from "@/components/ui/button";
 import { PostCard } from "./post-card";
-import {
-  Image as ImageIcon,
-  Gift,
-  BarChart3,
-  Smile,
-  CalendarClock,
-  MapPin,
-} from "lucide-react";
+import { PostComposer } from "./post-composer";
 
 interface HomeTimelineProps {
   posts: PostWithAuthor[];
@@ -46,41 +38,6 @@ const TimelineHeader: FC = () => {
         </button>
       </div>
     </header>
-  );
-};
-
-const PostComposer: FC = () => {
-  return (
-    <div className="flex gap-3 border-b border-slate-200 dark:border-slate-800 px-4 py-3 bg-white dark:bg-slate-950">
-      <div className="mt-1 flex h-10 w-10 items-center justify-center rounded-full bg-slate-300 dark:bg-slate-800 text-sm font-semibold text-slate-700 dark:text-slate-50">
-        Y
-      </div>
-      <div className="flex-1">
-        <textarea
-          className="w-full resize-none bg-transparent text-base outline-none placeholder:text-slate-500 text-slate-950 dark:text-slate-50"
-          rows={2}
-          placeholder="いまどうしてる？"
-        />
-        <div className="mt-3 flex items-center justify-between">
-          <div className="flex gap-4 text-sky-500">
-            <ImageIcon className="h-5 w-5" />
-            <Gift className="h-5 w-5" />
-            <BarChart3 className="h-5 w-5" />
-            <Smile className="h-5 w-5" />
-            <CalendarClock className="h-5 w-5" />
-            <MapPin className="h-5 w-5" />
-          </div>
-          <div className="flex items-center gap-3">
-            <Button
-              className="h-auto rounded-full bg-sky-500 px-6 py-2 text-sm font-semibold text-white hover:bg-sky-600"
-              variant="ghost"
-            >
-              ポストする
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
   );
 };
 

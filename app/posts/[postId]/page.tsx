@@ -2,12 +2,14 @@
 import type { FC } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 import { HomeSidebar } from "@/components/home/home-sidebar";
 import { HomeRightColumn } from "@/components/home/home-right-column";
 import { PostDetail } from "@/components/home/post-detail";
 import { MobileHeader } from "@/components/home/mobile-header";
 import { MobileBottomNav } from "@/components/home/mobile-bottom-nav";
 import { getPostById } from "@/lib/dal";
+import { prisma } from "@/lib/prisma";
 import { DUMMY_NEWS } from "@/app/page";
 
 interface PostPageProps {
@@ -47,7 +49,15 @@ export async function generateMetadata({
 
 const PostPage: FC<PostPageProps> = async ({ params }) => {
   const { postId } = await params;
-  const data = await getPostById(postId);
+  const { userId: clerkUserId } = await auth();
+  const dbUser =
+    clerkUserId != null
+      ? await prisma.user.findUnique({
+          where: { clerkUserId },
+          select: { id: true, username: true },
+        })
+      : null;
+  const data = await getPostById(postId, dbUser?.id);
 
   if (!data) {
     notFound();
@@ -57,7 +67,10 @@ const PostPage: FC<PostPageProps> = async ({ params }) => {
     <main className="relative h-screen overflow-hidden bg-slate-100 dark:bg-slate-950 text-slate-950 dark:text-slate-50">
       <MobileHeader />
       <div className="mx-auto flex h-full min-h-0 max-w-6xl flex-col px-0 pt-14 pb-16 sm:px-4 lg:flex-row lg:px-4 lg:pt-0 lg:pb-0">
-        <HomeSidebar navItems={POST_NAV_ITEMS} />
+        <HomeSidebar
+          navItems={POST_NAV_ITEMS}
+          currentUsername={dbUser?.username}
+        />
         <PostDetail data={data} />
         <HomeRightColumn newsItems={DUMMY_NEWS} />
       </div>
