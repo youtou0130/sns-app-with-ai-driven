@@ -5,11 +5,24 @@ import type { PostWithAuthor, UserProfileWithPosts } from "@/types/post";
 
 /**
  * username でユーザーを取得し、プロフィール情報と投稿一覧を返す。
+ * currentUserId を渡すと、そのユーザーがプロフィール主をフォローしているか isFollowing に含める。
  * cache() により同一リクエスト内の重複呼び出しは1回のクエリに集約される。
- * （例: generateMetadata と page の両方で呼ぶ場合）
  */
 export const getUserByUsername = cache(
-  async (username: string): Promise<UserProfileWithPosts | null> => {
+  async (
+    username: string,
+    currentUserClerkId?: string | null
+  ): Promise<UserProfileWithPosts | null> => {
+    const currentUserId =
+      currentUserClerkId != null
+        ? (
+            await prisma.user.findUnique({
+              where: { clerkUserId: currentUserClerkId },
+              select: { id: true },
+            })
+          )?.id ?? null
+        : null;
+
     const user = await prisma.user.findUnique({
       where: { username },
       include: {
@@ -37,6 +50,19 @@ export const getUserByUsername = cache(
       return null;
     }
 
+    let isFollowing = false;
+    if (currentUserId && currentUserId !== user.id) {
+      const follow = await prisma.follow.findUnique({
+        where: {
+          followerId_followingId: {
+            followerId: currentUserId,
+            followingId: user.id,
+          },
+        },
+      });
+      isFollowing = !!follow;
+    }
+
     const posts: PostWithAuthor[] = user.posts.map((post) => ({
       id: post.id,
       content: post.content,
@@ -60,9 +86,11 @@ export const getUserByUsername = cache(
         bio: user.bio,
         avatarUrl: user.avatarUrl,
         coverUrl: user.coverUrl,
+        location: (user as { location?: string | null }).location ?? null,
         createdAt: user.createdAt,
         followersCount: user._count.followers,
         followingCount: user._count.following,
+        isFollowing,
       },
       posts,
     };

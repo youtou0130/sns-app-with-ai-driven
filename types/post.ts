@@ -15,6 +15,8 @@ export interface PostWithAuthor {
   likesCount: number;
   retweetsCount: number;
   repliesCount: number;
+  /** 現在のユーザーがいいね済みか（ログイン時のみ） */
+  isLiked?: boolean;
 }
 
 // ユーザープロフィール用
@@ -25,9 +27,12 @@ export interface UserProfile {
   bio: string | null;
   avatarUrl: string | null;
   coverUrl: string | null;
+  location?: string | null;
   createdAt: Date;
   followersCount: number;
   followingCount: number;
+  /** ログインユーザーがこのユーザーをフォローしているか（未ログインは false） */
+  isFollowing?: boolean;
 }
 
 export interface UserProfileWithPosts {

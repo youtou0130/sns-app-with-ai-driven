@@ -1,13 +1,16 @@
 // components/home/profile-timeline.tsx
 import type { FC } from "react";
 import type { UserProfile, PostWithAuthor } from "@/types/post";
-import { Button } from "@/components/ui/button";
 import { PostCard } from "./post-card";
+import { ProfileEditButton } from "./profile-edit-button";
+import { FollowButton } from "./follow-button";
 import { Calendar } from "lucide-react";
 
 interface ProfileTimelineProps {
   user: UserProfile;
   posts: PostWithAuthor[];
+  /** 表示中のプロフィールがログインユーザー自身か */
+  isOwnProfile?: boolean;
 }
 
 const PROFILE_TABS = [
@@ -25,7 +28,11 @@ function formatJoinDate(date: Date): string {
   return `${year}年${month}月からXを利用しています`;
 }
 
-export const ProfileTimeline: FC<ProfileTimelineProps> = ({ user, posts }) => {
+export const ProfileTimeline: FC<ProfileTimelineProps> = ({
+  user,
+  posts,
+  isOwnProfile = false,
+}) => {
   const displayName = user.displayName || user.username;
   const avatarInitial = displayName.charAt(0).toUpperCase();
 
@@ -59,12 +66,15 @@ export const ProfileTimeline: FC<ProfileTimelineProps> = ({ user, posts }) => {
                 {avatarInitial}
               </div>
             )}
-            <Button
-              variant="outline"
-              className="rounded-full border-slate-400 dark:border-slate-600 bg-transparent px-4 py-2 text-sm font-semibold text-slate-950 dark:text-slate-50 hover:bg-slate-200 dark:hover:bg-slate-800"
-            >
-              フォロー
-            </Button>
+            {isOwnProfile ? (
+              <ProfileEditButton user={user} />
+            ) : (
+              <FollowButton
+                targetUserId={user.id}
+                isFollowing={user.isFollowing}
+                followersCount={user.followersCount}
+              />
+            )}
           </div>
 
           {/* ユーザー名・ハンドル */}

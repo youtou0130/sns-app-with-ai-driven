@@ -3,12 +3,8 @@ import type { FC } from "react";
 import Link from "next/link";
 import type { PostWithAuthor } from "@/types/post";
 import { formatRelativeTime } from "@/lib/utils/date";
-import {
-  MessageCircle,
-  Repeat2,
-  Heart,
-  Share,
-} from "lucide-react";
+import { LikeButton } from "./like-button";
+import { MessageCircle, Repeat2, Share } from "lucide-react";
 
 interface PostCardProps {
   post: PostWithAuthor;
@@ -99,10 +95,11 @@ export const PostCard: FC<PostCardProps> = ({
             <Repeat2 className="h-4 w-4" />
             <span className="text-xs">{post.retweetsCount || ""}</span>
           </button>
-          <button className="flex items-center gap-1.5 rounded-full p-2 hover:bg-rose-500/10 hover:text-rose-500 transition-colors">
-            <Heart className="h-4 w-4" />
-            <span className="text-xs">{post.likesCount || ""}</span>
-          </button>
+          <LikeButton
+            postId={post.id}
+            isLiked={post.isLiked}
+            likesCount={post.likesCount}
+          />
           <button className="rounded-full p-2 hover:bg-sky-500/10 hover:text-sky-500 transition-colors">
             <Share className="h-4 w-4" />
           </button>

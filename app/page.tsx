@@ -1,11 +1,13 @@
 // app/page.tsx
 import type { FC } from "react";
+import { auth } from "@clerk/nextjs/server";
 import { HomeSidebar } from "@/components/home/home-sidebar";
 import { HomeTimeline } from "@/components/home/home-timeline";
 import { HomeRightColumn } from "@/components/home/home-right-column";
 import { MobileHeader } from "@/components/home/mobile-header";
 import { MobileBottomNav } from "@/components/home/mobile-bottom-nav";
 import { getTimelinePosts } from "@/lib/dal";
+import { prisma } from "@/lib/prisma";
 
 export interface NewsItem {
   id: number;
@@ -59,13 +61,21 @@ export const DUMMY_NEWS: NewsItem[] = [
 ];
 
 const HomePage: FC = async () => {
-  const posts = await getTimelinePosts();
+  const { userId: clerkUserId } = await auth();
+  const dbUser =
+    clerkUserId != null
+      ? await prisma.user.findUnique({
+          where: { clerkUserId },
+          select: { id: true, username: true },
+        })
+      : null;
+  const posts = await getTimelinePosts(dbUser?.id);
 
   return (
     <main className="relative h-screen overflow-hidden bg-slate-100 dark:bg-slate-950 text-slate-950 dark:text-slate-50">
       <MobileHeader />
       <div className="mx-auto flex h-full min-h-0 max-w-6xl flex-col px-0 pt-14 pb-16 sm:px-4 lg:flex-row lg:px-4 lg:pt-0 lg:pb-0">
-        <HomeSidebar navItems={NAV_ITEMS} />
+        <HomeSidebar navItems={NAV_ITEMS} currentUsername={dbUser?.username} />
         <HomeTimeline posts={posts} />
         <HomeRightColumn newsItems={DUMMY_NEWS} />
       </div>
